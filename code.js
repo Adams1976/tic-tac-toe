@@ -1,4 +1,4 @@
-// Создаем HTML-структуру с использованием методов DOM
+// Создаем HTML-структуру 
 const createHTMLStructure = () => {
     const body = document.body;
 
