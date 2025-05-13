@@ -71,9 +71,7 @@ const createHTMLStructure = () => {
 
 createHTMLStructure();
 
-let player1Name = "Нолики";
-let player2Name = "Крестики";
-let step = "circle";
+
 let spanWho = document.getElementById('spanWho');
 let blockItem = document.querySelectorAll('.blockItem');
 let blockWinner = document.getElementById('blockWinner');
@@ -84,6 +82,9 @@ let inputPlayer1 = document.getElementById('inputPlayer1');
 let inputPlayer2 = document.getElementById('inputPlayer2');
 let counter = 0;
 let winner = "";
+let player1Name = "Нолики";
+let player2Name = "Крестики";
+let step = "circle";
 let isSinglePlayer = false; 
 
 // Меняем текущего игрока и обновляем текст
