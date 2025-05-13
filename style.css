@@ -1,3 +1,6 @@
+body{
+    background-image: url(./56a59cdc7d2142d7e51cc8fe94f18d22.webp);
+}
 main{
     display: flex;
     width: 100%;
@@ -5,13 +8,15 @@ main{
     font-family: Arial, Helvetica, sans-serif;
     flex-direction: column;
     align-items: center;
+
 }
 .playerInputs{
+    margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     font-size: 19px;
     font-weight: bolder;
     margin-bottom: 30px;
@@ -22,6 +27,7 @@ main{
     font-size: 17px;
     font-weight: 600;
     background-color: gold;
+    border: none;
     color: green;
     transition: .4s;
 }
@@ -33,10 +39,29 @@ main{
 #inputPlayer1{
     color: green;
     font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    padding-left: 5px;
+}
+#inputPlayer1::placeholder{
+    color: green;
+    font-size: 14px;
+    font-weight: 600;
 }
 #inputPlayer2{
     color: rgb(255, 0, 0);
     font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    padding-left: 5px;
+}
+#inputPlayer2::placeholder{
+    color: rgb(221, 22, 22);
+    font-size: 14px;
+    font-weight: 600;
+}
+label{
+    color: white;
 }
 .blockWho{
     padding: 25px;
@@ -45,6 +70,7 @@ main{
 .text{
     font-size: 24px;
     font-weight: 600;
+    color: white;
 
 }
 #spanWho{
@@ -58,12 +84,24 @@ main{
     height: 500px;
     margin-left: auto;
     margin-right: auto;
-    background: aliceblue;
+    background: rgb(255, 255, 255);
     flex-wrap: wrap;
     border-radius: 24px;
+    box-shadow: 4px 4px 4px 7px rgba(0, 0, 0, 0.5);
  
 }
-
+#toggleMode{
+    background-color: rgb(158, 4, 247);
+    color:white ;
+    border-radius: 10px;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+#toggleMode:hover{
+    background-color: rgb(117, 73, 158);
+}
 .blockItem{
     cursor: pointer;
     position: relative;
@@ -115,6 +153,7 @@ main{
     font-size: 25px;
     font-weight: bolder;
     margin-bottom: 22px;
+    color: white;
 }
 #spanWin{
     font-size: 24px;

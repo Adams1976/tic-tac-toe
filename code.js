@@ -23,7 +23,7 @@ const createHTMLStructure = () => {
 
     const btnStartGame = document.createElement('button');
     btnStartGame.id = 'btnStartGame';
-    btnStartGame.textContent = 'Начать игру';
+    btnStartGame.textContent = 'Новая игра';
 
     playerInputs.appendChild(labelPlayer1);
     playerInputs.appendChild(labelPlayer2);
@@ -57,11 +57,7 @@ const createHTMLStructure = () => {
     const textWin = document.createElement('div');
     textWin.className = 'textWin';
     textWin.innerHTML = 'Победитель: <span id="spanWin"></span>';
-    const btnNewGame = document.createElement('button');
-    btnNewGame.id = 'btnNewGame';
-    btnNewGame.textContent = 'Новая игра';
-    blockWinner.appendChild(textWin);
-    blockWinner.appendChild(btnNewGame);
+    blockWinner.appendChild(textWin); 
 
     main.appendChild(blockWho);
     main.appendChild(blockArea);
@@ -82,13 +78,13 @@ let spanWho = document.getElementById('spanWho');
 let blockItem = document.querySelectorAll('.blockItem');
 let blockWinner = document.getElementById('blockWinner');
 let spanWin = document.getElementById('spanWin');
-let btnNewGame = document.getElementById('btnNewGame');
 let btnStartGame = document.getElementById('btnStartGame');
 let blockArea = document.getElementById('blockArea');
 let inputPlayer1 = document.getElementById('inputPlayer1');
 let inputPlayer2 = document.getElementById('inputPlayer2');
 let counter = 0;
 let winner = "";
+let isSinglePlayer = false; 
 
 // Меняем текущего игрока и обновляем текст
 const who = () => {
@@ -106,7 +102,7 @@ const who = () => {
 // Запускаем игру
 const startGame = () => {
     player1Name = inputPlayer1.value || "Нолики";
-    player2Name = inputPlayer2.value || "Крестики";
+    player2Name = inputPlayer2.value || (isSinglePlayer ? "Компьютер" : "Крестики");
     spanWho.style.color = 'green';
     spanWho.innerText = player1Name;
     blockArea.style.pointerEvents = 'auto';
@@ -115,26 +111,95 @@ const startGame = () => {
         cell.innerText = "";
         cell.className = "blockItem";
     });
-    step = "circle";
+    step = "circle"; 
     counter = 0;
     winner = "";
 };
 
-// Добавляем обработчик клика для каждой клетки
-blockItem.forEach((item) => {
-    item.addEventListener('click', () => {
-        if (!item.classList.contains('circle') && !item.classList.contains('krest')) {
-            if (step == 'krest') {
-                item.innerText = 'X';
-            } else {
-                item.innerText = 'O';
-            }
-            item.classList.add(step);
-            counter++;
-            circleWin();
-            krestWin();
+
+// Создаем  переключателя режима
+const modeContainer = document.createElement('div');
+modeContainer.style.display = 'flex';
+modeContainer.style.alignItems = 'center';
+modeContainer.style.marginBottom = '10px';
+
+
+const modeLabel = document.createElement('span');
+modeLabel.textContent = 'Режим: ';
+modeLabel.style.marginRight = '10px';
+modeLabel.style.color = 'white'; 
+
+const toggleMode = document.createElement('button');
+toggleMode.id = 'toggleMode';
+toggleMode.textContent = 'Играть против компьютера';
+toggleMode.addEventListener('click', () => {
+    if (counter > 0 && !confirm('Вы уверены, что хотите сменить режим? Текущая игра будет сброшена.')) {
+        return;
+    }
+    isSinglePlayer = !isSinglePlayer;
+    toggleMode.textContent = isSinglePlayer ? 'Играть против человека' : 'Играть против компьютера';
+    startGame();
+});
+
+
+modeContainer.appendChild(modeLabel);
+modeContainer.appendChild(toggleMode);
+
+
+const playerInputs = document.querySelector('.playerInputs');
+playerInputs.insertBefore(modeContainer, document.getElementById('btnStartGame'));
+
+btnStartGame.addEventListener('click', startGame);
+
+// Ход компьютера
+const computerMove = () => {
+    let availableCells = [];
+    blockItem.forEach((cell, index) => {
+        if (!cell.classList.contains('circle') && !cell.classList.contains('krest')) {
+            availableCells.push(index);
+        }
+    });
+
+    if (availableCells.length > 0) {
+       
+        const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+        const cell = blockItem[randomIndex];
+        cell.innerText = 'X';
+        cell.classList.add('krest');
+        counter++;
+
+        if (!krestWin() && !circleWin()) {
             noWin();
-            who();
+            who(); 
+        }
+    }
+};
+
+// Добавляем обработчик клика 
+blockItem.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        
+        if (!item.classList.contains('circle') && !item.classList.contains('krest')) {
+          
+            if (step === 'circle') {
+                item.innerText = 'O';
+                item.classList.add('circle');
+            } else {
+                item.innerText = 'X';
+                item.classList.add('krest');
+            }
+            counter++;
+
+            // Проверяем победу или ничью
+            if (!circleWin() && !krestWin()) {
+                noWin();
+                if (isSinglePlayer && step === 'circle') {
+                    who(); 
+                    setTimeout(computerMove, 500); 
+                } else {
+                    who(); 
+                }
+            }
         }
     });
 });
@@ -164,7 +229,7 @@ let circleWin = () => {
             blockItem[win[i][2]].classList.add('winColor');
             winner = player1Name;
             endGame(winner);
-            return true;
+            return true; 
         }
     }
     return false;
@@ -183,15 +248,15 @@ let krestWin = () => {
             blockItem[win[i][2]].classList.add('winColor');
             winner = player2Name;
             endGame(winner);
-            return true;
+            return true; 
         }
     }
-    return false;
+    return false; 
 };
 
 // Проверяем ничью
 let noWin = () => {
-    if (!krestWin() && !circleWin() && counter >= 9) {
+    if (counter >= 9 && !circleWin() && !krestWin()) { 
         winner = 'Ничья';
         endGame(winner);
     }
@@ -199,11 +264,10 @@ let noWin = () => {
 
 // Завершаем игру
 let endGame = (winner) => {
-    blockArea.style.pointerEvents = 'none';
+    blockArea.style.pointerEvents = 'none'; 
     blockWinner.style.display = 'flex';
     spanWin.innerText = winner;
 
-    
     if (winner === player1Name) {
         spanWin.style.color = 'green'; 
     } else if (winner === player2Name) {
@@ -211,12 +275,4 @@ let endGame = (winner) => {
     } else {
         spanWin.style.color = 'blue'; 
     }
-
-    btnStartGame.style.display = 'none';
 };
-
-
-btnNewGame.addEventListener('click', startGame);
-
-
-btnStartGame.addEventListener('click', startGame);
